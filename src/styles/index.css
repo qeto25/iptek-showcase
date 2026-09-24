@@ -1,0 +1,365 @@
+@import "tailwindcss";
+
+:root {
+  --bg-dark: #080c14;
+  --bg-surface: rgba(18, 26, 43, 0.85);
+  --bg-surface-hover: rgba(28, 39, 64, 0.95);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(99, 102, 241, 0.4);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Ambient TV Lighting Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -15vw;
+  left: 20vw;
+  width: 65vw;
+  height: 65vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, rgba(14, 165, 233, 0.06) 50%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(90px);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -15vw;
+  right: 10vw;
+  width: 55vw;
+  height: 55vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.09) 0%, rgba(139, 92, 246, 0.07) 50%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(100px);
+}
+
+/* Glassmorphism Cards */
+.glass-panel {
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-hover:hover {
+  background: var(--bg-surface-hover);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.75), 0 0 25px rgba(99, 102, 241, 0.25);
+  transform: translateY(-4px);
+}
+
+/* Window Floating Shadow */
+.window-shadow {
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 50px rgba(79, 70, 229, 0.15);
+}
+
+/* Teks Udara (Floating HUD Indicator for TV Viewers) */
+@keyframes floatAirText {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+.teks-udara-bubble {
+  animation: floatAirText 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+}
+
+/* Ripple click effect */
+@keyframes clickRipple {
+  0% {
+    transform: scale(0.2);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.click-ripple {
+  position: absolute;
+  top: -16px;
+  left: -16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #38bdf8;
+  background: rgba(56, 189, 248, 0.25);
+  animation: clickRipple 0.55s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Custom fonts */
+.font-mono-code {
+  font-family: 'Fira Code', monospace;
+}
+
+.font-serif-title {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Custom TV Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.7);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* Natural, Organic Floating for 3D App Bubbles */
+@keyframes naturalFloat1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+@keyframes naturalFloat2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(-0.4deg);
+  }
+}
+
+@keyframes naturalFloat3 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(0.3deg);
+  }
+}
+
+.animate-float-1 {
+  animation: naturalFloat1 7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.animate-float-2 {
+  animation: naturalFloat2 8.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite 0.7s;
+}
+
+.animate-float-3 {
+  animation: naturalFloat3 7.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite 1.4s;
+}
+
+/* Simulation Specific Animations */
+@keyframes marchingAnts {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 24;
+  }
+}
+
+.marching-ants {
+  background-image: repeating-linear-gradient(
+    0deg, #10b981, #10b981 6px, transparent 6px, transparent 12px
+  ), repeating-linear-gradient(
+    90deg, #10b981, #10b981 6px, transparent 6px, transparent 12px
+  ), repeating-linear-gradient(
+    180deg, #10b981, #10b981 6px, transparent 6px, transparent 12px
+  ), repeating-linear-gradient(
+    270deg, #10b981, #10b981 6px, transparent 6px, transparent 12px
+  );
+  background-size: 2px 100%, 100% 2px, 2px 100%, 100% 2px;
+  background-position: 0 0, 0 0, 100% 0, 0 100%;
+  background-repeat: no-repeat;
+  animation: borderDance 1.2s infinite linear;
+}
+
+@keyframes borderDance {
+  0% {
+    background-position: 0 0, 0 0, 100% 0, 0 100%;
+  }
+  100% {
+    background-position: 0 -24px, 24px 0, 100% 24px, -24px 100%;
+  }
+}
+
+@keyframes naturalStamp {
+  0% {
+    transform: scale(1.1) rotate(-18deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(-14deg);
+    opacity: 0.95;
+  }
+}
+
+.animate-stamp {
+  animation: naturalStamp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes typingBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: typingBlink 0.8s infinite;
+}
+
+@keyframes shineSlide {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  100% { transform: translateX(200%) rotate(25deg); }
+}
+
+.animate-shine {
+  animation: shineSlide 2.5s infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 3s ease-in-out infinite;
+}
+
+/* ========================================================
+   PREMIUM 3D GLASS SPHERE (Apple / Sci-Fi Crystal Orb)
+   ======================================================== */
+
+.glass-sphere-body {
+  position: relative;
+  border-radius: 50%;
+  /* 3D Volumetric Spherical Shading with light origin at top-left (32% 24%) */
+  background: radial-gradient(
+    circle at 32% 24%,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0.08) 22%,
+    rgba(30, 41, 59, 0.45) 50%,
+    rgba(15, 23, 42, 0.85) 75%,
+    rgba(3, 7, 18, 0.98) 100%
+  );
+  box-shadow: 
+    inset 0 3px 6px rgba(255, 255, 255, 0.5),
+    inset 0 -10px 25px rgba(0, 0, 0, 0.8),
+    0 25px 50px -12px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.5s ease;
+}
+
+/* Realistic Glass Specular Light Flare (pantulan lengkung lensa atas) */
+.glass-sphere-body::before {
+  content: '';
+  position: absolute;
+  top: 7%;
+  left: 12%;
+  width: 60%;
+  height: 35%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 25%,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.15) 45%,
+    transparent 80%
+  );
+  transform: rotate(-22deg);
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Subtle Internal Crystal Rim / Fresnel at Bottom */
+.glass-sphere-body::after {
+  content: '';
+  position: absolute;
+  bottom: 6%;
+  left: 22%;
+  width: 56%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 55%,
+    transparent 85%
+  );
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Floor Ambient Shadow */
+.sphere-floor-shadow {
+  width: 65%;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 70%);
+  filter: blur(6px);
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.5s ease;
+}
+
+/* Hover Reactor Ignition Pulse */
+@keyframes reactorPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+}
+
+.animate-reactor {
+  animation: reactorPulse 2.8s ease-in-out infinite;
+}
+
+

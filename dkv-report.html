@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DKV DevKit - Enterprise Quality & Security Audit Report</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: #121215;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --sky: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 32px 20px;
+      line-height: 1.5;
+    }
+    .container { max-width: 1140px; margin: 0 auto; }
+    
+    /* Header */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+      gap: 16px;
+    }
+    .title-area h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .title-area p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--emerald);
+    }
+    
+    /* Top Grid */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 900px) {
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    
+    /* Score Banner */
+    .score-banner {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .score-circle {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #10b981;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .score-circle span { font-size: 18px; color: var(--text-muted); }
+    .grade-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Category Table */
+    .cat-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .cat-table tr { border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+    .cat-table td { padding: 10px 4px; font-size: 14px; }
+    .cat-table td.cat-name { font-weight: 500; display: flex; align-items: center; gap: 8px; }
+    .cat-table td.cat-score { text-align: right; font-weight: 700; font-family: monospace; }
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: opacity 0.4s ease;
+    }
+    
+    /* Radar Area */
+    .radar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .radar-chart { max-width: 100%; height: auto; }
+    
+    /* Priority Insights */
+    .insights-list { list-style: none; margin-top: 12px; }
+    .insights-list li {
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid var(--sky);
+      margin-bottom: 8px;
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+    }
+    
+    /* Filter Bar */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin: 32px 0 16px 0;
+      gap: 12px;
+    }
+    .filter-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .pill-btn.active, .pill-btn:hover {
+      background: #27272a;
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .search-input {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      min-width: 220px;
+    }
+    .search-input:focus { border-color: var(--emerald); }
+    
+    /* Finding Cards */
+    .finding-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .finding-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .finding-badge { font-weight: 600; color: #fff; }
+    .finding-loc { color: var(--sky); font-family: monospace; }
+    .finding-penalty { margin-left: auto; color: var(--rose); font-weight: 700; }
+    .finding-body { padding: 14px 16px; font-size: 13px; }
+    .field { margin-bottom: 8px; }
+    .field:last-child { margin-bottom: 0; }
+    .field .label { color: var(--text-muted); font-size: 12px; display: inline-block; width: 85px; }
+    .text-amber { color: #fcd34d; font-weight: 500; }
+    .text-rose { color: #fda4af; }
+    .text-emerald { color: #6ee7b7; font-weight: 500; }
+    .snippet-box {
+      background: #000;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+    .snippet-box code { font-family: monospace; font-size: 12px; color: #e4e4e7; }
+    .solution-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-top: 8px;
+      gap: 12px;
+    }
+    .copy-btn {
+      background: #18181b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover { background: #27272a; }
+    .ai-prompt-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+    }
+    .ai-prompt-btn:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+      border-color: #10b981;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="title-area">
+        <h1>🛡️ DKV DevKit Enterprise Auditor</h1>
+        <p>Target: <code>C:\Users\Hp\Downloads\iptek</code> &bull; Dieksekusi pada: 2026-09-24T10:43:52.947Z</p>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <button type="button" class="ai-prompt-btn" onclick="copyAiPrompt(this)" title="Salin laporan audit lengkap dengan instruksi pengawal validasi untuk AI">
+          🤖 Salin Laporan + Prompt AI
+        </button>
+        <div class="badge-live">
+          ⚡ 144ms &bull; 18 File &bull; 100% Zero-Destruction
+        </div>
+      </div>
+    </header>
+
+    
+    <div class="card" style="margin-bottom: 24px; padding: 16px 20px;">
+      <h3 style="font-size: 13px; margin-bottom: 10px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">🩺 Diagnostik Kesehatan Lingkungan & Proyek</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+        
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px;">
+            <div style="font-size: 11px; color: var(--text-muted);">Runtime Node.js</div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--emerald); margin-top: 2px;">
+              ✓ v24.21.0 (Memenuhi syarat &gt;= 18)
+            </div>
+          </div>
+        
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px;">
+            <div style="font-size: 11px; color: var(--text-muted);">Git Version Control</div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--amber); margin-top: 2px;">
+              ! Bukan repositori Git (bisa inisialisasi: git init)
+            </div>
+          </div>
+        
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px;">
+            <div style="font-size: 11px; color: var(--text-muted);">Pre-Commit Guard</div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--amber); margin-top: 2px;">
+              ! Belum terpasang (Pasang: dkv-tool install-hook)
+            </div>
+          </div>
+        
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px;">
+            <div style="font-size: 11px; color: var(--text-muted);">Tech Stack Terdeteksi</div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--emerald); margin-top: 2px;">
+              ✓ React ^19.3.0, TypeScript, Tailwind CSS
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    
+
+    <div class="overview-grid">
+      <div class="card">
+        <div class="score-banner">
+          <div>
+            <div class="score-circle">100<span>/100</span></div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Skor Mutu Agregat</div>
+          </div>
+          <div>
+            <div class="grade-badge">GRADE: A+</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Total 0 temuan audit</div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 15px; margin-bottom: 8px;">Breakdown Pilar Kualitas:</h3>
+        <table class="cat-table">
+          
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>🛡️</span>
+                  <span>Keamanan &amp; Proteksi Celah</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>📱</span>
+                  <span>Tata Letak Responsif &amp; Mobile</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>♿</span>
+                  <span>Aksesibilitas &amp; Inklusivitas (WCAG 2.2)</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>🎨</span>
+                  <span>Estetika &amp; Anti AI-Slop</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>⚡</span>
+                  <span>Performa Aset &amp; Bundle</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>🏛️</span>
+                  <span>Arsitektur Fullstack &amp; API</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>⚛️</span>
+                  <span>React 19 &amp; Lifecycle Pitfalls</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>🔍</span>
+                  <span>SEO, OpenGraph &amp; Social Metadata</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>📋</span>
+                  <span>Kelengkapan &amp; Standar Proyek</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>🧹</span>
+                  <span>Efisiensi &amp; Bebas Kode Boros (Zero-Touch)</span>
+                </td>
+                <td>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 100%; background: var(--emerald);"></div>
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--emerald);">100/100</td>
+              </tr>
+            
+              <tr>
+                <td class="cat-name" style="width: 260px;">
+                  <span>🧊</span>
+                  <span style="color: var(--text-muted);">3D Art &amp; WebGL Performance</span>
+                </td>
+                <td>
+                  <div style="font-size: 12px; color: var(--text-muted); font-style: italic;">
+                    Tidak ditemukan aset/komponen &bull; Tidak dihitung (N/A)
+                  </div>
+                </td>
+                <td class="cat-score" style="width: 70px; color: var(--text-muted);">-</td>
+              </tr>
+              
+        </table>
+      </div>
+
+      <div class="card radar-container">
+        <h3 style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">Radar Keseimbangan Kualitas</h3>
+        
+      <svg width="320" height="320" viewBox="0 0 320 320" class="radar-chart">
+        <circle cx="160" cy="160" r="27.5" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,3" /><circle cx="160" cy="160" r="55" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,3" /><circle cx="160" cy="160" r="82.5" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,3" /><circle cx="160" cy="160" r="110" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="160" y1="160" x2="160" y2="50" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="160.0" y="30.0" text-anchor="middle" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">🛡️ 100</text><line x1="160" y1="160" x2="224.65637775217203" y2="71.00813061875579" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="238.8" y="55.6" text-anchor="start" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">📱 100</text><line x1="160" y1="160" x2="264.6162167924669" y2="126.00813061875579" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="287.4" y="122.6" text-anchor="start" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">♿ 100</text><line x1="160" y1="160" x2="264.6162167924669" y2="193.99186938124421" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="287.4" y="205.4" text-anchor="start" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">🎨 100</text><line x1="160" y1="160" x2="224.65637775217203" y2="248.99186938124421" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="238.8" y="272.4" text-anchor="start" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">⚡ 100</text><line x1="160" y1="160" x2="160" y2="270" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="160.0" y="298.0" text-anchor="middle" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">🏛️ 100</text><line x1="160" y1="160" x2="95.34362224782797" y2="248.99186938124421" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="81.2" y="272.4" text-anchor="end" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">⚛️ 100</text><line x1="160" y1="160" x2="55.383783207533114" y2="193.99186938124421" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="32.6" y="205.4" text-anchor="end" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">🔍 100</text><line x1="160" y1="160" x2="55.3837832075331" y2="126.0081306187558" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="32.6" y="122.6" text-anchor="end" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">📋 100</text><line x1="160" y1="160" x2="95.34362224782794" y2="71.00813061875579" stroke="rgba(255,255,255,0.1)" stroke-width="1" /><text x="81.2" y="55.6" text-anchor="end" fill="#a1a1aa" font-size="10" font-family="system-ui, -apple-system, sans-serif">🧹 100</text>
+        
+      <polygon points="160.0,50.0 224.7,71.0 264.6,126.0 264.6,194.0 224.7,249.0 160.0,270.0 95.3,249.0 55.4,194.0 55.4,126.0 95.3,71.0" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="2" />
+      <circle cx="160.0" cy="50.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="224.7" cy="71.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="264.6" cy="126.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="264.6" cy="194.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="224.7" cy="249.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="160.0" cy="270.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="95.3" cy="249.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="55.4" cy="194.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="55.4" cy="126.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" /><circle cx="95.3" cy="71.0" r="4" fill="#10b981" stroke="#09090b" stroke-width="1.5" />
+    
+      </svg>
+    
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 32px;">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">💡 Prioritas Rekomendasi Tindak Lanjut:</h3>
+      <ul class="insights-list">
+        
+      </ul>
+    </div>
+
+    <div class="controls-bar">
+      <div class="filter-pills">
+        <button type="button" class="pill-btn active" onclick="filterCategory('all', this)">Semua (0)</button>
+        
+      </div>
+      <input type="text" class="search-input" placeholder="Cari file / temuan..." aria-label="Cari file atau temuan audit" oninput="searchFindings(this.value)">
+    </div>
+
+    <div id="findings-container">
+      <div class="card" style="text-align: center; color: var(--emerald); padding: 48px;">✨ 100% Bersih! Tidak ditemukan kekurangan atau risiko pada seluruh pilar.</div>
+    </div>
+  </div>
+
+  <textarea id="aiPromptData" style="display:none;">═══════════════════════════════════════════════════════════════════════════════
+🤖 PROMPT INSTRUKSI VALIDASI UNTUK AI (SALIN SELURUH BLOK INI KE CHAT AI)
+═══════════════════════════════════════════════════════════════════════════════
+
+Peran Anda: Senior Principal Engineer &amp; Technical Reviewer.
+Tugas Anda: Meninjau laporan audit DKV DevKit berikut ini dan memandu developer secara bertanggung jawab.
+
+⚠️ PROTOKOL MUTLAK PENGAWAL VALIDASI (DILARANG LANGSUNG MEROMBAK KODE):
+
+1. TAHAP 1: VALIDASI MASALAH (APAKAH MASALAH INI VALID?)
+   - Sebelum mengusulkan atau menulis perbaikan, periksa file dan baris kode terkait.
+   - Jawab secara tegas: &quot;Apakah temuan ini BENAR-BENAR VALID (masalah nyata), atau sekadar FALSE POSITIVE / kebutuhan fitur yang disengaja?&quot;
+   - Jelaskan secara objektif alasan teknis mengapa temuan tersebut benar atau salah.
+
+2. TAHAP 2: ATURAN SUPREMASI FUNGSI (RULE 0: ZERO-DESTRUCTION)
+   - Fitur, interaktivitas tombol, form submit, modal/dialog, dan state yang sudah berfungsi normal adalah PRIORITAS TERTINGGI.
+   - DILARANG menghapus atau memindahkan &#039;use client&#039; dari komponen interaktif.
+   - DILARANG menambahkan overflow-hidden yang memotong modal, popover, atau dropdown.
+   - Wajib sertakan type=&quot;button&quot; jika mengubah elemen clickable non-submit menjadi tag &lt;button&gt;.
+
+3. TAHAP 3: PERBAIKAN MINIMAL &amp; TERFOKUS (MINIMAL SAFE DIFF)
+   - Jika temuan terbukti VALID, tunjukkan HANYA baris kode spesifik yang perlu diubah.
+   - Berikan perubahan terkecil dan teraman (smallest safe change) tanpa menulis ulang seluruh file.
+
+───────────────────────────────────────────────────────────────────────────────
+DATA PROYEK: C:\Users\Hp\Downloads\iptek | Skor: 100/100 (Grade: A+) | 0 Isu
+───────────────────────────────────────────────────────────────────────────────
+
+✨ Status Proyek: Bersih dan memenuhi standar kualitas kelas dunia (tidak ada isu kritis).
+═══════════════════════════════════════════════════════════════════════════════</textarea>
+
+  <script>
+    function copyAiPrompt(btn) {
+      const data = document.getElementById('aiPromptData').value;
+      navigator.clipboard.writeText(data).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✨ Tersalin! Siap Paste ke AI ✓';
+        btn.style.borderColor = 'var(--emerald)';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 2200);
+      });
+    }
+
+    function copyText(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.innerText;
+        btn.innerText = 'Tersalin! ✓';
+        btn.style.borderColor = 'var(--emerald)';
+        btn.style.color = 'var(--emerald)';
+        setTimeout(() => {
+          btn.innerText = original;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 1800);
+      });
+    }
+
+    function filterCategory(catId, btn) {
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cards = document.querySelectorAll('.finding-card');
+      cards.forEach(card => {
+        if (catId === 'all' || card.dataset.category === catId) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function searchFindings(query) {
+      const q = query.toLowerCase();
+      const cards = document.querySelectorAll('.finding-card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(q)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
