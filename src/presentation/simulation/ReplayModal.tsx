@@ -205,7 +205,15 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 bg-slate-950/85 backdrop-blur-md animate-fade-in">
       {/* Modal Dialog Container: Zero Double-Frame, Edge-to-Edge Desktop Application Chrome */}
-      <div className="w-full max-w-6xl h-[94vh] sm:h-[90vh] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden relative">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="replay-modal-title"
+        className="w-full max-w-6xl h-[94vh] sm:h-[90vh] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden relative"
+      >
+        <h2 id="replay-modal-title" className="sr-only">
+          Simulasi Interaktif {project.name} — {project.title}
+        </h2>
         
         {/* Dynamic Native Application Window (Word, Excel, or Canva) */}
         <div className="flex-1 overflow-hidden relative">
@@ -215,7 +223,7 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
         {/* Bottom Playback Controller Dock */}
         <div className="bg-[#121316] border-t border-[#25262a] px-3 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-3 select-none text-xs">
           {/* Step Timeline Indicator Pills */}
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap" role="group" aria-label="Daftar langkah simulasi">
             {stepLabels.map((label, stepIdx) => {
               const isActive = currentStep === stepIdx;
               const isPast = currentStep > stepIdx;
@@ -227,7 +235,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
                     setCurrentStep(stepIdx);
                     setIsPlaying(false);
                   }}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  aria-label={`Lompat ke ${label}`}
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                     isActive
                       ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.6)]'
                       : isPast
@@ -254,7 +263,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
               type="button"
               onClick={handlePrevStep}
               disabled={currentStep === 0}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-slate-800 text-slate-200 transition-colors cursor-pointer"
+              aria-label="Langkah sebelumnya (Panah Kiri)"
+              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-slate-800 text-slate-200 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               title="Langkah Sebelumnya (Panah Kiri)"
             >
               <SkipBack className="w-4 h-4" />
@@ -264,7 +274,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
             <button
               type="button"
               onClick={() => setIsPlaying(!isPlaying)}
-              className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold flex items-center gap-2 shadow-md transition-colors cursor-pointer text-xs"
+              aria-label={isPlaying ? 'Jeda Simulasi (Spasi)' : 'Putar Simulasi (Spasi)'}
+              className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold flex items-center gap-2 shadow-md transition-colors cursor-pointer text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               title={isPlaying ? 'Jeda Simulasi (Spasi)' : 'Putar Simulasi (Spasi)'}
             >
               {isPlaying ? (
@@ -285,7 +296,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
               type="button"
               onClick={handleNextStep}
               disabled={currentStep === totalSteps - 1}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-slate-800 text-slate-200 transition-colors cursor-pointer"
+              aria-label="Langkah berikutnya (Panah Kanan)"
+              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-slate-800 text-slate-200 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               title="Langkah Berikutnya (Panah Kanan)"
             >
               <SkipForward className="w-4 h-4" />
@@ -295,7 +307,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
             <button
               type="button"
               onClick={handleRestart}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors cursor-pointer"
+              aria-label="Ulangi dari langkah pertama (R)"
+              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               title="Ulangi dari Langkah 1 (R)"
             >
               <RotateCcw className="w-4 h-4" />
@@ -308,7 +321,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenResearch(project.id as 'word' | 'excel' | 'canva')}
-                className="flex items-center gap-1.5 bg-blue-950/60 hover:bg-blue-900 border border-blue-500/40 text-blue-300 hover:text-white px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                aria-label={`Buka materi riset untuk ${project.name}`}
+                className="flex items-center gap-1.5 bg-blue-950/60 hover:bg-blue-900 border border-blue-500/40 text-blue-300 hover:text-white px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 title="Buka Dokumen Riset Mendalam Software Ini"
               >
                 <BookOpen className="w-3.5 h-3.5 text-blue-400" />
@@ -319,7 +333,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
             <button
               type="button"
               onClick={cycleSpeed}
-              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg text-xs font-mono transition-colors border border-slate-700 cursor-pointer"
+              aria-label={`Ubah kecepatan pemutaran (saat ini ${speed}x)`}
+              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg text-xs font-mono transition-colors border border-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               title="Ubah Kecepatan Simulasi"
             >
               <Gauge className="w-3.5 h-3.5 text-slate-400" />
@@ -329,7 +344,8 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center gap-1 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg text-xs transition-colors border border-slate-700 cursor-pointer"
+              aria-label="Tutup simulasi (Esc)"
+              className="flex items-center gap-1 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg text-xs transition-colors border border-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
               title="Keluar dari Simulasi (Esc)"
             >
               <X className="w-3.5 h-3.5" />

@@ -64,10 +64,10 @@ export function App() {
   };
 
   const handleStartFullPresentation = () => {
-    setActiveProjectType('word');
+    setActiveProjectType('excel');
     setIsReplayModalOpen(true);
-    setAlertMessage('Memulai Mode Presentasi Lengkap (Mulai dari Microsoft Word).');
-    setTimeout(() => setAlertMessage(null), 3000);
+    setAlertMessage('Memulai Alur Presentasi: 01 — Microsoft Excel (Hitung Anggaran).');
+    setTimeout(() => setAlertMessage(null), 3500);
   };
 
   const handleOpenResearch = (tab: 'overview' | 'canva' | 'word' | 'excel' = 'overview') => {
@@ -112,6 +112,7 @@ export function App() {
         isOpen={isResearchModalOpen}
         onClose={() => setIsResearchModalOpen(false)}
         defaultTab={researchTab}
+        onLaunchSimulation={handleOpenProject}
       />
     </div>
   );
