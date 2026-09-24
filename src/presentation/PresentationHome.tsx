@@ -9,7 +9,7 @@ interface PresentationHomeProps {
   onOpenProject: (type: ProjectType) => void;
   onLaunchReplay: (type: ProjectType) => void;
   onStartFullPresentation: () => void;
-  onOpenResearch?: (tab?: 'overview' | 'canva' | 'word' | 'excel') => void;
+  onOpenResearch?: (tab?: 'overview' | 'canva' | 'word' | 'excel' | 'conclusion') => void;
 }
 
 export const PresentationHome: React.FC<PresentationHomeProps> = ({
@@ -19,6 +19,20 @@ export const PresentationHome: React.FC<PresentationHomeProps> = ({
   onOpenResearch
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  // Detect user prefers-reduced-motion preference to handle video accessibility
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   // Toggle Fullscreen mode for TV / Aula presentation
   const toggleFullscreen = () => {
@@ -42,6 +56,7 @@ export const PresentationHome: React.FC<PresentationHomeProps> = ({
   }, []);
 
   const getAnimationClass = (index: number) => {
+    if (prefersReducedMotion) return '';
     switch (index % 3) {
       case 0:
         return 'animate-float-1';
@@ -61,17 +76,19 @@ export const PresentationHome: React.FC<PresentationHomeProps> = ({
         backgroundImage: "url('/images/wallpaper-moon.png')"
       }}
     >
-      {/* Background Video directly loaded and auto-playing */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        poster="/images/wallpaper-moon.png"
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-70"
-      >
-        <source src="/bg.mp4" type="video/mp4" />
-      </video>
+      {/* Background Video: paused and omitted if user requests reduced motion */}
+      {!prefersReducedMotion && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/images/wallpaper-moon.png"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-70"
+        >
+          <source src="/bg.mp4" type="video/mp4" />
+        </video>
+      )}
 
       {/* Cinematic Contrast Overlay to make text and icons pop */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#070b14]/80 via-black/40 to-[#070b14]/90 pointer-events-none z-0" />
@@ -80,7 +97,7 @@ export const PresentationHome: React.FC<PresentationHomeProps> = ({
       <header className="relative z-20 w-full max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 pt-2">
         {/* Left: Organization Badge & Research Button */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-700/80 backdrop-blur-md text-xs font-semibold text-slate-300 shadow-sm">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-700/80 backdrop-blur-md text-xs font-semibold text-slate-300 shadow-sm select-text">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             Divisi IPTEK OSIS — Studi Kasus SPETRA 2026
           </span>
@@ -121,15 +138,15 @@ export const PresentationHome: React.FC<PresentationHomeProps> = ({
 
       {/* HERO SECTION: Clear Presentation Title & Narrative */}
       <section className="relative z-10 w-full max-w-4xl mx-auto text-center mt-4 sm:mt-6 mb-2">
-        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)] select-text">
           Pelatihan Administrasi & Desain OSIS
         </h1>
-        <p className="mt-2.5 sm:mt-3 text-xs sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-md">
+        <p className="mt-2.5 sm:mt-3 text-xs sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-md select-text">
           Buat anggaran di <span className="text-emerald-400 font-semibold">Excel</span>, susun proposal di <span className="text-blue-400 font-semibold">Word</span>, lalu publikasikan kegiatan dengan <span className="text-purple-400 font-semibold">Canva</span>.
         </p>
 
         {/* 3-Stage Workflow Roadmap Indicator */}
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs select-text">
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 backdrop-blur-sm shadow-sm">
             <span className="font-bold">01</span>
             <span>Hitung Anggaran</span>
@@ -177,7 +194,7 @@ export const PresentationHome: React.FC<PresentationHomeProps> = ({
       </section>
 
       {/* FOOTER: Accessible Navigation Hints */}
-      <footer className="relative z-10 w-full max-w-4xl mx-auto text-center pt-2 pb-1 text-[11px] text-slate-400">
+      <footer className="relative z-10 w-full max-w-4xl mx-auto text-center pt-2 pb-1 text-[11px] text-slate-400 select-text">
         <p>
           Klik salah satu ikon di atas untuk mencoba simulasi interaktif, atau gunakan tombol <span className="text-white font-medium">Mulai Presentasi</span> untuk alur penuh.
         </p>

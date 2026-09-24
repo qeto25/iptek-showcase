@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
   BookOpen,
@@ -16,13 +16,16 @@ import {
   Play
 } from 'lucide-react';
 import { WordBrandIcon, ExcelBrandIcon, CanvaBrandIcon } from '../components/AppIcons';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 export type ResearchTabType = 'overview' | 'excel' | 'word' | 'canva' | 'conclusion';
+
+const TABS: ResearchTabType[] = ['overview', 'excel', 'word', 'canva', 'conclusion'];
 
 interface ResearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  defaultTab?: 'overview' | 'canva' | 'word' | 'excel';
+  defaultTab?: ResearchTabType;
   onLaunchSimulation?: (type: 'excel' | 'word' | 'canva') => void;
 }
 
@@ -35,6 +38,17 @@ export const ResearchModal: React.FC<ResearchModalProps> = ({
   const [activeTab, setActiveTab] = useState<ResearchTabType>(defaultTab);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState<boolean>(false);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Accessible Focus Trap & Restoration
+  useFocusTrap(modalRef, {
+    isOpen,
+    onClose,
+    initialFocusRef: closeButtonRef,
+    closeOnEscape: true
+  });
+
   // Sync internal activeTab whenever modal opens or defaultTab changes (Root cause fix from GPT audit)
   useEffect(() => {
     if (isOpen) {
@@ -43,27 +57,45 @@ export const ResearchModal: React.FC<ResearchModalProps> = ({
     }
   }, [isOpen, defaultTab]);
 
-  // Keyboard navigation for escape key
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  // Keyboard navigation for WAI-ARIA tab list (ArrowLeft, ArrowRight, Home, End)
+  const handleTablistKeyDown = (e: React.KeyboardEvent) => {
+    const currentIndex = TABS.indexOf(activeTab);
+    let nextIndex = -1;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % TABS.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + TABS.length) % TABS.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = TABS.length - 1;
+    }
+
+    if (nextIndex !== -1) {
+      const nextTab = TABS[nextIndex];
+      setActiveTab(nextTab);
+      window.requestAnimationFrame(() => {
+        document.getElementById(`tab-${nextTab}`)?.focus();
+      });
+    }
+  };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 bg-slate-950/85 backdrop-blur-md animate-fade-in text-slate-200">
       <div
+        ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="research-modal-title"
-        className="w-full max-w-5xl h-[92vh] sm:h-[88vh] bg-[#0c1017] border border-slate-800 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.9)] flex flex-col overflow-hidden relative"
+        className="w-full max-w-5xl h-[92vh] sm:h-[88vh] bg-[#0c1017] border border-slate-800 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.9)] flex flex-col overflow-hidden relative focus:outline-none"
+        tabIndex={-1}
       >
         {/* Top Header Bar */}
         <header className="bg-[#111622] border-b border-slate-800 px-4 sm:px-6 py-3.5 flex items-center justify-between shrink-0">
@@ -87,6 +119,7 @@ export const ResearchModal: React.FC<ResearchModalProps> = ({
           </div>
 
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={onClose}
             aria-label="Tutup dialog materi (Esc)"
@@ -97,10 +130,11 @@ export const ResearchModal: React.FC<ResearchModalProps> = ({
           </button>
         </header>
 
-        {/* Agenda / Progress Indicator Tab Bar */}
+        {/* Agenda / Progress Indicator Tab Bar with Keyboard Navigation */}
         <nav
           role="tablist"
           aria-label="Agenda Presentasi IPTEK OSIS"
+          onKeyDown={handleTablistKeyDown}
           className="bg-[#0e121b] border-b border-slate-800/80 px-3 sm:px-4 flex items-center gap-1 sm:gap-2 overflow-x-auto shrink-0 scrollbar-none py-2"
         >
           <button

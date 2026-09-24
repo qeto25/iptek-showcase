@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { ProjectMetadata } from '../../types/project';
+import React, { useState, useEffect, useRef } from 'react';
+import { ProjectMetadata, ProjectType } from '../../types/project';
 import { WordSimulation } from './WordSimulation';
 import { ExcelSimulation } from './ExcelSimulation';
 import { CanvaSimulation } from './CanvaSimulation';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 import {
   Play,
   Pause,
@@ -11,14 +12,18 @@ import {
   SkipBack,
   Gauge,
   X,
-  BookOpen
+  BookOpen,
+  ArrowRight,
+  CheckCircle2
 } from 'lucide-react';
 
 interface ReplayModalProps {
   project: ProjectMetadata;
   isOpen: boolean;
   onClose: () => void;
-  onOpenResearch?: (tab: 'overview' | 'canva' | 'word' | 'excel') => void;
+  onOpenResearch?: (tab: 'overview' | 'canva' | 'word' | 'excel' | 'conclusion') => void;
+  onNextStage?: (nextType: ProjectType) => void;
+  onFinishPresentation?: () => void;
   initialMode?: 'interactive' | 'replay';
 }
 
@@ -26,11 +31,24 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
   project,
   isOpen,
   onClose,
-  onOpenResearch
+  onOpenResearch,
+  onNextStage,
+  onFinishPresentation
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [speed, setSpeed] = useState(1); // 0.75x, 1x, 1.5x, 2x
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Accessible Focus Trap & Restoration
+  useFocusTrap(modalRef, {
+    isOpen,
+    onClose,
+    initialFocusRef: closeButtonRef,
+    closeOnEscape: true
+  });
 
   // Excel has 5 dedicated steps (including explicit Currency Rp formatting), Word & Canva have 4 steps
   const totalSteps = project.id === 'excel' ? 5 : 4;
@@ -202,14 +220,54 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
     }
   };
 
+  const getNextStageInfo = () => {
+    if (project.id === 'excel') {
+      return {
+        nextType: 'word' as ProjectType,
+        shortLabel: 'Lanjut: 02 Word (Proposal)',
+        buttonClass: 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
+      };
+    }
+    if (project.id === 'word') {
+      return {
+        nextType: 'canva' as ProjectType,
+        shortLabel: 'Lanjut: 03 Canva (Publikasi)',
+        buttonClass: 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]'
+      };
+    }
+    if (project.id === 'canva') {
+      return {
+        nextType: null,
+        shortLabel: 'Selesai: Rangkuman & Kesimpulan',
+        buttonClass: 'bg-amber-600 hover:bg-amber-500 text-white shadow-[0_0_15px_rgba(217,119,6,0.5)]'
+      };
+    }
+    return null;
+  };
+
+  const nextStageInfo = getNextStageInfo();
+
+  const handleNextStageClick = () => {
+    if (nextStageInfo?.nextType && onNextStage) {
+      onNextStage(nextStageInfo.nextType);
+    } else if (onFinishPresentation) {
+      onFinishPresentation();
+    } else if (onOpenResearch) {
+      onClose();
+      onOpenResearch('conclusion');
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 bg-slate-950/85 backdrop-blur-md animate-fade-in">
       {/* Modal Dialog Container: Zero Double-Frame, Edge-to-Edge Desktop Application Chrome */}
       <div
+        ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="replay-modal-title"
-        className="w-full max-w-6xl h-[94vh] sm:h-[90vh] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden relative"
+        className="w-full max-w-6xl h-[94vh] sm:h-[90vh] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden relative focus:outline-none"
+        tabIndex={-1}
       >
         <h2 id="replay-modal-title" className="sr-only">
           Simulasi Interaktif {project.name} — {project.title}
@@ -315,8 +373,24 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
             </button>
           </div>
 
-          {/* Speed, Research & Exit Controls */}
+          {/* Speed, Research, Stage Progression & Exit Controls */}
           <div className="flex items-center gap-2">
+            {/* Stage Progression Action Button */}
+            {nextStageInfo && (
+              <button
+                type="button"
+                onClick={handleNextStageClick}
+                aria-label={nextStageInfo.shortLabel}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${nextStageInfo.buttonClass} ${
+                  currentStep === totalSteps - 1 ? 'animate-pulse ring-2 ring-white/50' : ''
+                }`}
+                title={nextStageInfo.shortLabel}
+              >
+                <span>{nextStageInfo.shortLabel}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+
             {onOpenResearch && (
               <button
                 type="button"
@@ -342,6 +416,7 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
             </button>
 
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={onClose}
               aria-label="Tutup simulasi (Esc)"

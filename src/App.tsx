@@ -50,7 +50,7 @@ export function App() {
   const [activeProjectType, setActiveProjectType] = useState<ProjectType | null>(null);
   const [isReplayModalOpen, setIsReplayModalOpen] = useState(false);
   const [isResearchModalOpen, setIsResearchModalOpen] = useState(false);
-  const [researchTab, setResearchTab] = useState<'overview' | 'canva' | 'word' | 'excel'>('overview');
+  const [researchTab, setResearchTab] = useState<'overview' | 'canva' | 'word' | 'excel' | 'conclusion'>('overview');
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const handleOpenProject = (type: ProjectType) => {
@@ -70,7 +70,25 @@ export function App() {
     setTimeout(() => setAlertMessage(null), 3500);
   };
 
-  const handleOpenResearch = (tab: 'overview' | 'canva' | 'word' | 'excel' = 'overview') => {
+  const handleNextStage = (nextType: ProjectType) => {
+    setActiveProjectType(nextType);
+    if (nextType === 'word') {
+      setAlertMessage('Beralih ke Tahap 02 — Microsoft Word (Susun Proposal).');
+    } else if (nextType === 'canva') {
+      setAlertMessage('Beralih ke Tahap 03 — Canva (Publikasikan Kegiatan).');
+    }
+    setTimeout(() => setAlertMessage(null), 3500);
+  };
+
+  const handleFinishPresentation = () => {
+    setIsReplayModalOpen(false);
+    setResearchTab('conclusion');
+    setIsResearchModalOpen(true);
+    setAlertMessage('Presentasi Selesai! Menampilkan Kesimpulan & Sinergi Alur Kerja.');
+    setTimeout(() => setAlertMessage(null), 4000);
+  };
+
+  const handleOpenResearch = (tab: 'overview' | 'canva' | 'word' | 'excel' | 'conclusion' = 'overview') => {
     setResearchTab(tab);
     setIsResearchModalOpen(true);
   };
@@ -104,6 +122,8 @@ export function App() {
           isOpen={isReplayModalOpen}
           onClose={() => setIsReplayModalOpen(false)}
           onOpenResearch={handleOpenResearch}
+          onNextStage={handleNextStage}
+          onFinishPresentation={handleFinishPresentation}
         />
       )}
 
