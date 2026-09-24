@@ -77,9 +77,14 @@ export const FloatingAppBubble: React.FC<FloatingAppBubbleProps> = ({
         >
           {project.name}
         </h3>
-        <p className={`text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full border ${theme.badgeBg} transition-all inline-block`}>
-          {project.title}
-        </p>
+        <div className="flex flex-col items-center gap-1">
+          <p className={`text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full border ${theme.badgeBg} transition-all inline-block`}>
+            {project.title}
+          </p>
+          <span className="text-[10px] text-slate-400 font-mono tracking-tight">
+            {project.badge}
+          </span>
+        </div>
       </div>
     </button>
   );

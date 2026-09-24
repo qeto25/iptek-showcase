@@ -334,30 +334,52 @@ export const ExcelSimulation: React.FC<ExcelSimulationProps> = ({
           </span>
         </div>
 
-        {/* Right Search & User Avatar */}
+        {/* Right Search, Profile & Desktop Window Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-[10px] text-emerald-200 font-mono hidden md:inline px-2 py-0.5 rounded bg-emerald-800/60 border border-emerald-500/40">
+            Aplikasi Desktop (Office 365)
+          </span>
+
           <div className="hidden lg:flex items-center gap-1.5 bg-emerald-800/80 hover:bg-emerald-800 text-emerald-100 px-3 py-1 rounded text-[11px] border border-emerald-500/40">
             <Search className="w-3 h-3" />
             <span>Search</span>
           </div>
+
           <div className="flex items-center gap-1.5 text-xs text-emerald-100 font-medium">
-            <span>qeto 40</span>
+            <span className="hidden sm:inline">qeto 40</span>
             <div className="w-6 h-6 rounded-full bg-amber-600 text-white font-bold flex items-center justify-center text-[11px] shadow-xs">
               C
             </div>
           </div>
-          {onClose && (
-            <div className="flex items-center pl-1 border-l border-emerald-700">
+
+          {/* Windows Window Controls */}
+          <div className="flex items-center pl-1 border-l border-emerald-700">
+            <button
+              type="button"
+              aria-label="Kecilkan jendela Excel"
+              className="w-7 h-7 flex items-center justify-center rounded hover:bg-emerald-800 text-white/80 hover:text-white cursor-pointer"
+            >
+              <Minus className="w-3 h-3" />
+            </button>
+            <button
+              type="button"
+              aria-label="Perbesar jendela Excel"
+              className="w-7 h-7 flex items-center justify-center rounded hover:bg-emerald-800 text-white/80 hover:text-white cursor-pointer"
+            >
+              <span className="w-2.5 h-2.5 border border-current rounded-xs" />
+            </button>
+            {onClose && (
               <button
                 type="button"
                 onClick={onClose}
+                aria-label="Tutup jendela Excel (Esc)"
                 className="w-7 h-7 flex items-center justify-center rounded hover:bg-red-600 text-white transition-colors cursor-pointer"
                 title="Tutup Excel (Esc)"
               >
                 <X className="w-4 h-4" />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

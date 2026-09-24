@@ -202,30 +202,52 @@ export const WordSimulation: React.FC<WordSimulationProps> = ({
           <span className="text-[11px] text-blue-200">- Compatibility Mode - Saved to this PC</span>
         </div>
 
-        {/* Right Search, Profile & Controls */}
+        {/* Right Search, Profile & Desktop Window Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-[10px] text-blue-200 font-mono hidden md:inline px-2 py-0.5 rounded bg-blue-700/50 border border-blue-400/30">
+            Aplikasi Desktop (Office 365)
+          </span>
+
           <div className="hidden lg:flex items-center gap-1.5 bg-blue-700/60 hover:bg-blue-700 text-blue-100 px-3 py-1 rounded text-[11px] border border-blue-400/30">
             <Search className="w-3 h-3" />
             <span>Search</span>
           </div>
+
           <div className="flex items-center gap-1.5 text-xs text-blue-100 font-medium">
-            <span>qeto 40</span>
+            <span className="hidden sm:inline">qeto 40</span>
             <div className="w-6 h-6 rounded-full bg-teal-600 text-white font-bold flex items-center justify-center text-[11px] shadow-xs">
               C
             </div>
           </div>
-          {onClose && (
-            <div className="flex items-center pl-1 border-l border-blue-700">
+
+          {/* Windows Window Controls */}
+          <div className="flex items-center pl-1 border-l border-blue-700">
+            <button
+              type="button"
+              aria-label="Kecilkan jendela Word"
+              className="w-7 h-7 flex items-center justify-center rounded hover:bg-blue-700 text-white/80 hover:text-white cursor-pointer"
+            >
+              <Minus className="w-3 h-3" />
+            </button>
+            <button
+              type="button"
+              aria-label="Perbesar jendela Word"
+              className="w-7 h-7 flex items-center justify-center rounded hover:bg-blue-700 text-white/80 hover:text-white cursor-pointer"
+            >
+              <span className="w-2.5 h-2.5 border border-current rounded-xs" />
+            </button>
+            {onClose && (
               <button
                 type="button"
                 onClick={onClose}
+                aria-label="Tutup jendela Word (Esc)"
                 className="w-7 h-7 flex items-center justify-center rounded hover:bg-red-600 text-white transition-colors cursor-pointer"
                 title="Tutup Word (Esc)"
               >
                 <X className="w-4 h-4" />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

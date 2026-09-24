@@ -6,24 +6,11 @@ import { ResearchModal } from './presentation/ResearchModal';
 
 const PROJECTS: ProjectMetadata[] = [
   {
-    id: 'word',
-    name: 'Microsoft Word',
-    title: 'Proposal Kegiatan',
-    category: 'Dokumen Proposal',
-    badge: 'Word Document',
-    description: 'Format surat pengantar, struktur kepanitiaan, tabel peserta kelas, dan susunan rundown acara resmi.',
-    learningGoal: 'Struktur kepanitiaan, tabel peserta, rundown, dan juknis lomba.',
-    keyHighlights: ['Format Proposal Resmi', 'Tabel Delegasi Kelas', 'Rundown 07.15 - 13.10'],
-    icon: 'word',
-    color: '#185abd',
-    gradient: 'from-blue-600 to-indigo-600'
-  },
-  {
     id: 'excel',
     name: 'Microsoft Excel',
-    title: 'Anggaran Otomatis',
+    title: '01 — Hitung Anggaran',
     category: 'Spreadsheet Anggaran',
-    badge: 'Excel Spreadsheet',
+    badge: 'Aplikasi Desktop (.xlsx)',
     description: 'Otomatisasi rumus perkalian =C5*D5, tarik Fill Handle ke bawah, formula =SUM, dan format Rupiah.',
     learningGoal: 'Rumus otomatis perkalian dan penjumlahan total dana.',
     keyHighlights: ['Rumus =C5*D5 Otomatis', 'Tarik Fill Handle', 'Grand Total =SUM(...)'],
@@ -32,11 +19,24 @@ const PROJECTS: ProjectMetadata[] = [
     gradient: 'from-emerald-600 to-teal-600'
   },
   {
+    id: 'word',
+    name: 'Microsoft Word',
+    title: '02 — Susun Proposal',
+    category: 'Dokumen Proposal',
+    badge: 'Aplikasi Desktop (.docx)',
+    description: 'Format surat pengantar, struktur kepanitiaan, tabel peserta kelas, dan susunan rundown acara resmi.',
+    learningGoal: 'Struktur kepanitiaan, tabel peserta, rundown, dan juknis lomba.',
+    keyHighlights: ['Format Proposal Resmi', 'Tabel Delegasi Kelas', 'Rundown 07.15 - 13.10'],
+    icon: 'word',
+    color: '#185abd',
+    gradient: 'from-blue-600 to-indigo-600'
+  },
+  {
     id: 'canva',
     name: 'Canva',
-    title: 'Poster Upacara',
+    title: '03 — Publikasikan Kegiatan',
     category: 'Desain Komposisi Visual',
-    badge: 'Canva Poster',
+    badge: 'Web Browser (canva.com)',
     description: 'Tata letak visual poster upacara bendera hari Senin dengan pita merah putih, kartu info, dan ilustrasi siswa.',
     learningGoal: 'Hierarki tipografi dan komposisi visual upacara sekolah.',
     keyHighlights: ['Pita Merah Putih & Garuda', 'Trio Kartu Informasi', 'Ilustrasi Siswa Hormat'],

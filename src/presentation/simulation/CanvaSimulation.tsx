@@ -11,7 +11,12 @@ import {
   X,
   Check,
   MessageSquare,
-  Sparkles
+  Sparkles,
+  ArrowLeft,
+  ArrowRight,
+  RotateCw,
+  Lock,
+  Star
 } from 'lucide-react';
 import { VirtualCursor, CursorType } from './VirtualCursor';
 
@@ -188,6 +193,90 @@ export const CanvaSimulation: React.FC<CanvaSimulationProps> = ({
         actionText={cursorAction}
       />
 
+      {/* 0. Authentic Web Browser Chrome Frame (Google Chrome / Edge) */}
+      <div className="bg-[#1e232a] text-slate-300 border-b border-[#2b313a] shrink-0 text-xs select-none">
+        {/* Browser Tab Strip */}
+        <div className="flex items-center justify-between px-2 pt-1.5 pb-0 bg-[#14181d]">
+          {/* Tabs */}
+          <div className="flex items-center gap-1">
+            {/* Active Canva Tab */}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-t-lg bg-[#1e232a] text-white border-t border-x border-[#2b313a] shadow-xs text-[11px] font-medium max-w-[240px]">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#00c4cc] flex items-center justify-center text-[8px] font-black text-slate-950">
+                C
+              </span>
+              <span className="truncate">Canva — Poster Upacara Bendera</span>
+              <span className="text-slate-400 hover:text-white p-0.5 rounded cursor-pointer ml-1">
+                <X className="w-2.5 h-2.5" />
+              </span>
+            </div>
+
+            {/* New Tab Button */}
+            <button type="button" aria-label="Tab Baru" className="p-1 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded cursor-pointer">
+              <Plus className="w-3 h-3" />
+            </button>
+          </div>
+
+          {/* Browser Window Controls (Minimize, Maximize, Close) */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-teal-300 font-mono hidden sm:inline px-2 py-0.5 rounded bg-teal-500/10 border border-teal-500/20">
+              Web Browser (Cloud Studio)
+            </span>
+            <div className="flex items-center">
+              <button type="button" aria-label="Kecilkan jendela browser" className="w-8 h-6 flex items-center justify-center hover:bg-slate-700/50 text-slate-400 hover:text-white cursor-pointer">
+                <Minus className="w-3 h-3" />
+              </button>
+              <button type="button" aria-label="Perbesar jendela browser" className="w-8 h-6 flex items-center justify-center hover:bg-slate-700/50 text-slate-400 hover:text-white cursor-pointer">
+                <span className="w-2.5 h-2.5 border border-current rounded-xs" />
+              </button>
+              {onClose && (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Tutup jendela browser (Esc)"
+                  className="w-8 h-6 flex items-center justify-center hover:bg-red-600 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Browser Navigation & URL Omnibox */}
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1e232a]">
+          <div className="flex items-center gap-1 text-slate-400">
+            <button type="button" aria-label="Halaman Sebelumnya" className="p-1 hover:text-white hover:bg-slate-700/50 rounded cursor-pointer">
+              <ArrowLeft className="w-3.5 h-3.5" />
+            </button>
+            <button type="button" aria-label="Halaman Berikutnya" className="p-1 hover:text-white hover:bg-slate-700/50 rounded opacity-40 cursor-not-allowed">
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            <button type="button" aria-label="Muat Ulang Halaman" className="p-1 hover:text-white hover:bg-slate-700/50 rounded cursor-pointer">
+              <RotateCw className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Omnibox / URL Bar */}
+          <div className="flex-1 flex items-center gap-2 bg-[#12161b] hover:bg-[#151a21] border border-[#2e3540] rounded-full px-3 py-1 text-xs text-slate-300 shadow-inner">
+            <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
+            <span className="text-slate-400 select-all font-mono text-[11px] truncate">
+              https://<strong className="text-white">www.canva.com</strong>/design/DAF8kL2sPqY/edit?folder=osis-spetra
+            </span>
+            <div className="ml-auto flex items-center gap-1.5 text-slate-400">
+              <Star className="w-3 h-3 hover:text-amber-400 cursor-pointer" />
+            </div>
+          </div>
+
+          {/* Browser User Profile */}
+          <div className="flex items-center gap-1.5 pl-1 text-[11px] text-slate-300">
+            <div className="w-5 h-5 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center text-[9px] shadow-xs">
+              IP
+            </div>
+            <span className="hidden lg:inline text-slate-400">OSIS IPTEK</span>
+          </div>
+        </div>
+      </div>
+
       {/* 1. Canva Studio Top Navbar */}
       <div className="bg-[#00c4cc] text-slate-900 px-3 py-1 flex items-center justify-between text-xs select-none shrink-0 border-b border-teal-500 shadow-sm">
         {/* Left: Canva Teal Home Button, File, Ubah Ukuran, Edit */}
@@ -241,18 +330,6 @@ export const CanvaSimulation: React.FC<CanvaSimulationProps> = ({
             {isExported && <Check className="w-3 h-3" />}
             <span>{isExported ? 'Siap Dicetak' : 'Kirim ke guru'}</span>
           </button>
-          {onClose && (
-            <div className="flex items-center pl-1 border-l border-teal-600">
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-7 h-7 flex items-center justify-center rounded hover:bg-red-600 hover:text-white text-slate-900 transition-colors cursor-pointer"
-                title="Tutup Canva Studio (Esc)"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
