@@ -88,7 +88,7 @@ export const ResearchModal: React.FC<ResearchModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 bg-slate-950/85 backdrop-blur-md animate-fade-in text-slate-200">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-5 bg-slate-950/85 backdrop-blur-md animate-fade-in text-slate-200">
       <div
         ref={modalRef}
         role="dialog"

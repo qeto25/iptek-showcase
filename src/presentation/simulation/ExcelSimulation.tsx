@@ -282,7 +282,7 @@ export const ExcelSimulation: React.FC<ExcelSimulationProps> = ({
         setIsCursorClicking(false);
         setCursorPos({ x: 58, y: 78 });
         setCursorType('default');
-        setCursorAction('Grand Total = Rp 1,063,000');
+        setCursorAction('Grand Total = ' + formatRp(grandTotal));
       }, 4100);
     }
 

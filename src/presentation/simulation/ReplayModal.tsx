@@ -279,7 +279,7 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
         </div>
 
         {/* Bottom Playback Controller Dock */}
-        <div className="bg-[#121316] border-t border-[#25262a] px-3 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-3 select-none text-xs">
+        <div className="bg-[#121316] border-t border-[#25262a] px-3 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3 select-none text-xs shrink-0">
           {/* Step Timeline Indicator Pills */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap" role="group" aria-label="Daftar langkah simulasi">
             {stepLabels.map((label, stepIdx) => {
@@ -394,7 +394,10 @@ export const ReplayModal: React.FC<ReplayModalProps> = ({
             {onOpenResearch && (
               <button
                 type="button"
-                onClick={() => onOpenResearch(project.id as 'word' | 'excel' | 'canva')}
+                onClick={() => {
+                  setIsPlaying(false);
+                  onOpenResearch(project.id as 'word' | 'excel' | 'canva');
+                }}
                 aria-label={`Buka materi riset untuk ${project.name}`}
                 className="flex items-center gap-1.5 bg-blue-950/60 hover:bg-blue-900 border border-blue-500/40 text-blue-300 hover:text-white px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 title="Buka Dokumen Riset Mendalam Software Ini"
